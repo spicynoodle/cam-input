@@ -16,7 +16,7 @@ echo $lon
 exiftool -overwrite_original -GPSLongitude=$lat -GPSLatitude=$lon $out
 
 ## use it siganture as a file name
-filename=$(identify -verbose $out | grep signature | awk -F':' '{print$2}' | xargs)%$lat%$lon.jpeg
+filename=$(identify -verbose $out | grep signature | awk -F':' '{print$2}' | xargs)%$lat%$lon%.jpeg
 echo $filename
 
 ## upload to s3
