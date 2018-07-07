@@ -6,20 +6,21 @@ set -ev
 out="out.jpeg"
 streamer -c /dev/video0 -b 256 -o $out
 
-## use it siganture as a file name
-sig=$(identify -verbose $out | grep signature | awk -F':' '{print$2}' | xargs).jpeg
-mv $out $sig
-
 ## add geotag
 coordinates=$(wget https://whataremycoordinates.com/ -O - -o /dev/null | pup '.coordinates' | sed -n '2p')
 lat=$(echo $coordinates | awk -F',' '{print$1}')
 lon=$(echo $coordinates | awk -F',' '{print$2}' | xargs)
+echo $lat
+echo $lon
 
-exiftool -overwrite_original -GPSLongitude=$lat -GPSLatitude=$lon $sig
+exiftool -overwrite_original -GPSLongitude=$lat -GPSLatitude=$lon $out
+
+## use it siganture as a file name
+filename=$(identify -verbose $out | grep signature | awk -F':' '{print$2}' | xargs)%$lat%$lon.jpeg
+echo $filename
 
 ## upload to s3
 bucket="spicy-noodle"
-aws s3 cp $sig s3://$bucket/$sig --acl public-read
+aws s3 cp $out s3://$bucket/$filename --acl public-read
 
-mkdir -p .backup
-mv $sig .backup
+rm -f $out
