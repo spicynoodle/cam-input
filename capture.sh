@@ -8,8 +8,8 @@ streamer -c /dev/video0 -b 256 -o $out
 
 ## add geotag
 coordinates=$(wget https://whataremycoordinates.com/ -O - -o /dev/null | pup '.coordinates' | sed -n '2p')
-lat=$(echo $coordinates | awk -F',' '{print$1}' | sed 's/\./?/g')
-lon=$(echo $coordinates | awk -F',' '{print$2}' | sed 's/\./?/g' |xargs)
+lat=$(echo $coordinates | awk -F',' '{print$1}')
+lon=$(echo $coordinates | awk -F',' '{print$2}' | xargs)
 echo $lat
 echo $lon
 
