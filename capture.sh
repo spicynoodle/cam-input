@@ -21,6 +21,6 @@ echo $filename
 
 ## upload to s3
 bucket="spicy-noodle"
-aws s3 cp $out s3://$bucket/$filename --acl public-read
+aws s3 cp $out s3://$bucket/"$filename" --acl public-read
 
 rm -f $out
