@@ -9,3 +9,10 @@ streamer -c /dev/video0 -b 256 -o $out
 ## use it siganture as a file name
 sig=$(identify -verbose $out | grep signature | awk -F':' '{print$2}').jpeg
 mv $out $sig
+
+## add geotag
+coordinates=$(wget https://whataremycoordinates.com/ -O - -o /dev/null | pup '.coordinates' | sed -n '2p')
+lat=$(echo $coordinates | awk -F',' '{print$1}')
+lon=$(echo $coordinates | awk -F',' '{print$2}' | xargs)
+
+exiftool -overwrite_original -GPSLongitude=$lat -GPSLatitude=$lon $sig
