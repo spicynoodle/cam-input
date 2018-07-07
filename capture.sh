@@ -19,7 +19,7 @@ exiftool -overwrite_original -GPSLongitude=$lat -GPSLatitude=$lon $sig
 
 ## upload to s3
 bucket="spicy-noodle"
-aws s3 cp $sig s3://$bucket/$sig
+aws s3 cp $sig s3://$bucket/$sig --acl public-read
 
 mkdir -p .backup
 mv $sig .backup
